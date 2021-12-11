@@ -1,24 +1,31 @@
 extension VotingRound {
-    enum Proposal: CustomStringConvertible {
+    public enum Proposal: CustomStringConvertible {
         case earnInterest(on: Characteristic)
         case increaseVotingPower(for: Characteristic)
 
-        static func random(levelCap: Int) -> VotingRound.Proposal {
+        public static func random(levelCap: Int) -> VotingRound.Proposal {
             switch Int.random(in: 0...1) {
-                case 0: return .earnInterest(on: .random(levelCap: levelCap))
-                case 1: return .increaseVotingPower(for: .random(levelCap: levelCap))
+                case 0:
+                    return .earnInterest(on: .random(levelCap: levelCap))
+                case 1:
+                    let proposal: Proposal = .increaseVotingPower(for: .random(levelCap: levelCap))
+                    guard case(.level) = proposal.characteristic else {
+                        return proposal
+                    }
+                    // Can't vote for increasing XP for specific levels
+                    return random(levelCap: levelCap)
             default: fatalError()
             }
         }
 
-        var characteristic: Characteristic {
+        public var characteristic: Characteristic {
             switch self {
             case .earnInterest(let char): return char
             case .increaseVotingPower(let char): return char
             }
         }
 
-        var label: String {
+        public var label: String {
             switch self {
             case .earnInterest:
                 return "earnInterest"
@@ -27,7 +34,7 @@ extension VotingRound {
             }
         }
 
-        var description: String {
+        public var description: String {
             switch self {
             case .earnInterest(let char):
                 return "+Earn, on: \"\(char)\""
@@ -43,7 +50,7 @@ extension VotingRound.Proposal: Codable {
         case earnInterest, increaseVotingPower
     }
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if let value = try? container.decode(Characteristic.self, forKey: .earnInterest) {
@@ -56,7 +63,7 @@ extension VotingRound.Proposal: Codable {
         }
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         switch self {
         case .earnInterest(let char):
@@ -68,13 +75,13 @@ extension VotingRound.Proposal: Codable {
 }
 
 extension VotingRound.Proposal {
-    enum Characteristic: Hashable, CustomStringConvertible, Codable {
+    public enum Characteristic: Hashable, CustomStringConvertible, Codable {
         case color(Card.Color)
         case level(Int)
         case pip(Card.Pip)
         case unknown
 
-        static func random(levelCap: Int) -> Characteristic {
+        public static func random(levelCap: Int) -> Characteristic {
             switch Int.random(in: 0...2) {
             case 0: return .color(.random())
             case 1: return .level(Int.random(in: 0...levelCap))
@@ -83,7 +90,7 @@ extension VotingRound.Proposal {
             }
         }
 
-        init(from decoder: Decoder) throws {
+        public init(from decoder: Decoder) throws {
             let container = try decoder.singleValueContainer()
             let value = try container.decode(String.self)
 
@@ -106,12 +113,12 @@ extension VotingRound.Proposal {
             }
         }
 
-        func encode(to encoder: Encoder) throws {
+        public func encode(to encoder: Encoder) throws {
             var container = encoder.singleValueContainer()
             try container.encode(self.description)
         }
 
-        var description: String {
+        public var description: String {
             switch self {
             case .pip(let pip): return "pip \(pip.rawValue)"
             case .level(let level): return "level \(level)"
