@@ -16,14 +16,15 @@ const AccountInfoComponent = ({ drizzle, drizzleState }) => {
         />
       </div>      
       <div className="KingBalance">
+        Total Supply:&nbsp;
         <ContractData
           drizzle={drizzle}
           drizzleState={drizzleState}
-          contract="SuicideKings"
-          method="balanceOf"
-          methodArgs={[drizzleState.accounts[0]]}
+          contract="SuicideKing"
+          method="totalSupply"
+          methodArgs={[1]}
         />
-        &nbsp;King(s)
+        &nbsp;KINGS
       </div>
     {/*
       <div>

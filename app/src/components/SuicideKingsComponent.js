@@ -1,11 +1,13 @@
 import React from "react";
 import { newContextComponents } from "@drizzle/react-components";
 import AccountInfoComponent from "./AccountInfoComponent";
-import ListKingsComponent from "./ListKingsComponent";
+//import ListKingsComponent from "./ListKingsComponent";
+import CompoundInfoComponent from "./CompoundInfoComponent";
 import logo from "../logo.png";
 
+// Drizzle Context provides three types of React Components (below) -- Loading Component not available in this version yet :-(
 //const { AccountData, ContractData, ContractForm } = newContextComponents;
-const { ContractForm, ContractData } = newContextComponents;
+const { ContractForm } = newContextComponents;
 
 const SuicideKingsComponent = ({ drizzle, drizzleState }) => {
   return (
@@ -19,72 +21,19 @@ const SuicideKingsComponent = ({ drizzle, drizzleState }) => {
         </div>
       </div>
       <div className="AppMain">
-        <div className="MintKing">
+        <div className="MintKing section">
         <div className="ComponentTitle">Mint King: </div>
-          <ContractForm drizzle={drizzle} contract="SuicideKings" method="mintKing" sendArgs={{gas: 800000}} />      
+          {/*
+          <ContractForm drizzle={drizzle} contract="SuicideKings" method="mintKing" sendArgs={{gas: 800000}} />
+          */}
         </div>
-        <div className="ListKings">
+        <div className="ListKings section">
+          {/*
           <ListKingsComponent drizzle={drizzle} drizzleState={drizzleState} />
+          */}
         </div>
-        <div className="CompoundInfo">
-          <div className="ComponentTitle">Compound Info:</div>
-          <p>
-            <span>Compound Contract Name: </span>
-            <ContractData
-              drizzle={drizzle}
-              drizzleState={drizzleState}
-              contract="CETH"
-              method="name"
-            />
-          </p>
-          <p>
-            <span>Total Borrows: </span>
-            <ContractData
-              drizzle={drizzle}
-              drizzleState={drizzleState}
-              contract="CETH"
-              method="totalBorrows"
-            />
-          </p>
-          <p>
-            <span>Total Supply: </span>
-            <ContractData
-              drizzle={drizzle}
-              drizzleState={drizzleState}
-              contract="CETH"
-              method="totalSupply"
-            />
-          </p>
-          <div>
-            <span>Mint 0.1 ETH worth of cETH: </span>
-            <ContractForm
-              drizzle={drizzle}
-              drizzleState={drizzleState}
-              contract="CETH"
-              method="mint"
-              sendArgs={{value: 100000000000000000}}
-            />
-          </div>          
-          <div>
-            <span>Your cETH balance: </span>
-            <ContractData
-              drizzle={drizzle}
-              drizzleState={drizzleState}
-              contract="CETH"
-              method="balanceOf"
-              methodArgs={[drizzleState.accounts[0]]}
-            />
-          </div>
-          <div>
-            <span>Convert cETH to ETH</span>
-            <ContractForm
-              drizzle={drizzle}
-              drizzleState={drizzleState}
-              contract="CETH"
-              method="redeem"
-              labels={["Amount of cETH"]}
-            />
-          </div>
+        <div className="CompoundInfo section">
+          <CompoundInfoComponent drizzle={drizzle} drizzleState={drizzleState} />
         </div>
       </div>
 
